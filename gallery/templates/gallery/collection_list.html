@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <head>
+        <title>Collection List</title>
+        <style>
+            .Card {
+                display: flex;
+                justify-content: center;
+
+                margin-top: 25px;
+                width: 100%;
+                min-height: 26rem;
+            }
+
+            .Card-body {
+                --margin: 2em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex-basis: 60%;
+
+                margin-top: var(--margin);
+                margin-bottom: var(--margin);
+                margin-left: -5em;
+                padding: 0 1.4em;
+                background-color: #fff;
+                box-shadow: rgba(0,0,0,.2) 0 .2em .2em;
+
+            }
+            .Card-title {
+                margin-bottom: .4em;
+                text-transform: uppercase;
+            }
+            .Card-title,
+            .Card-description { margin: 0; }
+
+            .Card-body, .Card-body:before, .Card-body:after  {
+                background-color: #fff;
+                border: 1px solid #ccc;
+                box-shadow: inset 0 0 30px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+                z-index: 4;
+            }
+
+            .Card-body  {
+                position: relative;
+                width: 100%;
+                padding: 2em;
+                margin: 50px auto;
+            }
+
+            .Card-body:before, .Card-body:after  {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                -webkit-transform: rotateZ(2.5deg);
+                -o-transform: rotate(2.5deg);
+                transform: rotateZ(2.5deg);
+                z-index: -1;
+            }
+
+            .Card-body:after  {
+                -webkit-transform: rotateZ(-2.5deg);
+                -o-transform: rotate(-2.5deg);
+                transform: rotateZ(-2.5deg);
+            }
+        </style>
+    </head>
+
+    <body style="min-width: 411px">
+    <!--COLLECTIONS-->
+    <div style="top: 70px; position: relative; z-index: 0">
+        <h1 style="color: white; left: 25px; position: relative">Collection Gallery</h1>
+        <!--ADD-BUTTON--->
+        <a href="{% url 'gallery:collection_new' %}" class="btn btn-dark" style="background-color: #f7b801; left: 25px; margin-top: 10px; position: relative">Add Collection</a>
+        <!--END-OF-ADD-BUTTON--->
+        {% for collection in collections %}
+            {% if request.user.is_superuser or user.get_username == collection.collection_artist|stringformat:"s" %}
+                <div class="Card">
+                    <div class="Card-body">
+                        <h1 class="Card-title">{{ collection.collection_name }}</h1>
+                        <p class="Card-description">
+                            {{ collection.collection_description }}
+                            <br>
+                            {{ collection.collection_artist }}
+                        <hr style="border: 2px solid black; border-radius: 3px; opacity: .5; margin: 3px; margin-left: 0; position: relative"></p>
+                        {% if request.user.is_superuser or user.get_username == collection.collection_artist|stringformat:"s" %}
+                            <a href="{% url 'gallery:collection_edit' pk=collection.pk %}" class="btn btn-warning" style="width: 10em">Edit</a>
+                            <br style="margin: 1px; position: relative">
+                            <a href="{% url 'gallery:collection_delete' pk=collection.pk %}" onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger" style="width: 10em">Delete</a>
+                            <br style="margin: 1px; position: relative">
+                            <a href="{% url 'gallery:collection_view' pk=collection.pk %}" class="btn btn-primary" style="width: 10em">View Collection</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <!--END-OF-COLLECTIONS-->
+    </div>
+    </body>
+    </html>
+{% endblock %}
+</html>
+
+

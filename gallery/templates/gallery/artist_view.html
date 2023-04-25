@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Artist Artworks</title>
+        <style>
+            .title {
+                position: relative;
+                color: white;
+                line-height: 3;
+            }
+
+            .artistpic {
+                vertical-align: middle;
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                position: center;
+                margin: auto;
+                display: block;
+                object-fit: cover;
+            }
+
+            .pic-size{
+                width: 400px;
+                height: 400px;
+                object-fit: cover;
+            }
+
+            img.zoom {
+                border-radius: 5px;
+                object-fit: cover;
+                -webkit-transition: all .3s ease-in-out;
+                -moz-transition: all .3s ease-in-out;
+                -o-transition: all .3s ease-in-out;
+                -ms-transition: all .3s ease-in-out;
+            }
+
+            .transition {
+                -webkit-transform: scale(1.05);
+                -moz-transform: scale(1.05);
+                -o-transform: scale(1.05);
+                transform: scale(1.05);
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+        <!-- Add fancybox3 -->
+        <!-- Reference - https://fancyapps.com/fancybox/3/docs/#introduction -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+    </head>
+    <body>
+    <div class="container" style="top: 15px; position: relative; margin-bottom: 50px">
+        <table class="row justify-content-center">
+            <tr>
+                <td>
+                    <h1 class="title text-center"
+                        style="top: 25px; position: relative">{{ artist.user }}</h1>
+                    <hr style="border: 2px solid white; border-radius: 5px; top: -10px; opacity: .5; width: 70%; position: relative">
+                </td>
+            </tr>
+            {% if artist.profile_picture %}
+                <tr>
+                    <td>
+                        <img src="{% get_media_prefix %}{{ artist.profile_picture }}" class="artistpic">
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+    <div class="container page-top col-lg-12 col-md-12">
+        <div class="row">
+            {% for artwork in artworks %}
+                <div class="col-lg-3 col-md-3 col-xs-6 thumb">
+                    <figure>
+                        <a data-fancybox="images"
+                           href="{% get_media_prefix %}{{ artwork.artwork_picture }}"
+                           data-caption="{{ artwork.artwork_title }}">
+                            <!-- Transition logic to zoom the thumbnail - https://bootsnipp.com/snippets/aMGnk -->
+                            <img class="img-fluid pic-size zoom" style= "border-radius: 10px 40px;" src="{% get_media_prefix %}{{ artwork.artwork_picture }}"/>
+                        </a>
+                        <figcaption class="card-body" style="color: white; display: none">
+                            <h2 class="card-title">{{ artwork.artwork_title }}</h2>
+                            <h4 class="card-text">{{ artwork.artwork_description }}</h4>
+                        </figcaption>
+                        <p><h4 style="color: white">{{ artwork.artwork_title }}</h4></p>
+                    </figure>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <script>
+        // Clone defaults
+        var imgOpts = $.extend(true, {}, $.fancybox.defaults, {
+            caption: function (instance, item) {
+                return $(this).next('figcaption').html();
+            },
+            buttons: ["zoom", "share", "slideShow", "fullScreen", "download", "thumbs", "close"],
+            thumbs: {
+                autoStart: true
+            },
+        });
+
+        // Shortcut to apply options to image gallery
+        function applyImgOpts() {
+            $('[data-fancybox="images"]').fancybox(imgOpts);
+        }
+
+        $(".zoom").hover(function () {
+            $(this).addClass('transition');
+        }, function () {
+            $(this).removeClass('transition');
+        });
+
+        applyImgOpts();
+    </script>
+    </body>
+    </html>
+{% endblock %}
+</html>

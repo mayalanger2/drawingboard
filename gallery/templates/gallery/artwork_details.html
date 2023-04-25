@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+{% extends 'gallery/base.html' %}
+just after the  <html lang="en">
+{% load static %}
+
+{% block content %}
+    <head>
+    <meta charset="utf-8">
+
+    <style>
+        #blur {
+        background-image: url("{{ artwork.artwork_picture.url }}");
+        height: 100%;
+        filter: blur(8px);
+        -webkit-filter: blur(8px);
+        background-size: cover;
+        z-index: -5;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: .3;
+        }
+
+        .rating {
+        width: 300px;
+        margin: 0;
+        font-size: 30px;
+        overflow:hidden;
+        }
+        .rating input {
+        float: right;
+        opacity: 0;
+        position: absolute;
+        }
+        .rating a,
+        .rating label {
+		float:right;
+		color: #28225d;
+		text-decoration: none;
+		-webkit-transition: color .4s;
+		-moz-transition: color .4s;
+		-o-transition: color .4s;
+		transition: color .4s;
+		}
+        .rating label:hover ~ label,
+        .rating input:focus ~ label,
+        .rating label:hover,
+		.rating a:hover,
+		.rating a:hover ~ a,
+		.rating a:focus,
+		.rating a:focus ~ a		{
+		color: #f7b801;
+		cursor: pointer;
+		}
+		.rating2 {
+		direction: rtl;
+		}
+		.rating2 a {
+		float:none
+		}
+
+
+        /*Heart Button*/
+        .button{
+			background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
+			background-image: linear-gradient(top, #f4f1ee, #fff);
+			border-radius: 50%;
+			box-shadow: 0 8px 10px 0 rgba(0, 0, 0, .3), inset 0 4px 1px 1px white, inset 0 -3px 1px 1px rgba(204,198,197,.5);
+			float: left;
+			height: 70px;
+			margin: 0 30px 30px 0;
+			position: relative;
+			width: 70px;
+			-webkit-transition: all .5s linear;
+			transition: all .5s linear;
+
+		}
+
+		.button:after{
+			content: "";
+			display: block;
+			font-size: 30px;
+			height: 30px;
+			text-decoration: none;
+			text-shadow: 0 -1px 1px #bdb5b4, 1px 1px 1px white;
+			position: absolute;
+			width: 30px;
+		}
+
+		.heart:after{
+			content: "❤";
+			left: 21px;
+			top: 16px;
+		}
+
+        .heart:hover, .heart.red { color: red; }
+
+    </style>
+    <script>
+        $(".rating a").on('click', function(e){
+	    let value = $(this).data('value');
+        $.ajax({url: "some_url",
+        type: 'POST',
+        data: {'rating': value},
+        success: function (d){
+            //processing
+        }
+        })
+        });
+
+        $(document).ready(function(){
+          $(".heart").click(function(){
+            $(this).toggleClass("red");
+          });
+
+        });
+
+    </script>
+    </head>
+
+    <!--BLUR-->
+    <div id = "blur"></div>
+    <!--END-OF-BLUR-->
+    <!---CARD---->
+    <div class="container bcontent" style="position: absolute; top: 0; margin: 0; z-index: 0">
+        <div class="card" style="width: 100%; z-index: 4; position: absolute; left: 0; height: 100%; background-color: rgba(245, 245, 245, 0.4); ">
+            <div class="row no-gutters" style=" margin-left: 1em; margin-right: 1em; margin-top: 15%; position: absolute; !important opacity: 1" >
+                <div class="col-sm-5">
+                    <img class="card-img" src="{{ artwork.artwork_picture.url }}" style= "border-radius: 10px 40px;" alt="Card image cap">
+                </div>
+                <div class="col-sm-7">
+                    <div class="card-body" style="color: white;">
+                    <!---RATING--->
+                    <!---this is temporary; it doesn't have functionality yet
+                    Copy-and-pasted from here: https://stackoverflow.com/questions/59593884/django-rendering-a-number-as-a-5-stars-rating
+                    -->
+                    {% if user.is_authenticated %}
+                        {% if request.user.is_superuser %}
+                        {% else %}
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                        <h4 style="color: #f7b801">Previous Rating: {{ prevrate }}</h4>
+                        <div class="rating rating2">
+                            <a href="{% url 'gallery:rating_new' pk=artwork.pk level=5%}" title="Give 5 stars" data-value="5">★</a>
+                            <a href="{% url 'gallery:rating_new' pk=artwork.pk level=4%}" title="Give 4 stars" data-value="4">★</a>
+                            <a href="{% url 'gallery:rating_new' pk=artwork.pk level=3%}" title="Give 3 stars" data-value="3">★</a>
+                            <a href="{% url 'gallery:rating_new' pk=artwork.pk level=2%}" title="Give 2 stars" data-value="2">★</a>
+                            <a href="{% url 'gallery:rating_new' pk=artwork.pk level=1%}" title="Give 1 star" data-value="1">★</a>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    <!---END-OF-RATING--->
+                        <h5>Average Rating: {{ avgrate }}</h5>
+                        <p style="font-weight: bold; font-size: xx-large">{{ artwork.artwork_title }}</p>
+                        <a style="color: #f7b801" href="{% url 'gallery:artist_view' pk=artwork.artwork_artist.pk %}"><p style="font-size: large">Artist: {{ artwork.artwork_artist }}</p></a>
+                        <p>Submitted: {{ artwork.artwork_created }}</p>
+                        <p>Description: {{ artwork.artwork_description }}</p>
+
+                    <!---TAG-LIST--->
+
+                        <p style="font-size: medium">Tags: </p>
+                        {% for tag in artwork.artwork_tag.all %}
+                            <li style="display:inline;">{{ tag }}, </li>
+                        {% endfor %}
+                    <!---END-OF-TAG-LIST--->
+                        <hr style="border: 2px solid white; border-radius: 5px; opacity: .5; width: 50%; margin-left: 0; position: relative">
+                    <!--BACK-BUTTON--->
+                        <a href="{% url 'gallery:home' %}" class="btn btn-dark" style="background-color: #f7b801">Back to Home</a>
+                    <!--END-OF-BACK-BUTTON--->
+                    <!--FAVORITE-->
+                    {% if user.is_authenticated %}
+                        {% if request.user.is_superuser %}
+                        {% else %}
+                            <a href="{% url 'gallery:favorite_new' pk=artwork.pk %}" class="button heart {{ status }}"></a>
+                        {% endif %}
+                    {% endif %}
+                    <!--END-OF-FAVORITE-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---END-OF-CARD---->
+
+
+
+
+{% endblock %}
+</html>

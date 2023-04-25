@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+<style>
+    .homebutton {
+        align-self: center;
+        background: transparent;
+        padding: 1rem 1rem;
+        margin: 1rem;
+        transition: all .5s ease;
+        color: white;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        outline: none;
+        box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, .2);
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        border:solid 2px white;
+    }
+    .homebutton:hover{
+        box-shadow:2px 8px 4px -6px hsla(0,0%,0%,.3);
+        color: black;
+        background-color: #f7b801;
+        border:solid 5px black;
+    }
+
+    a, a:hover, a:visited, a:active {
+      text-decoration: none;
+    }
+
+    .photos {
+      /* Prevent vertical gaps */
+      line-height: 0;
+      -webkit-column-count: 5;
+      -webkit-column-gap:   0px;
+      -moz-column-count:    5;
+      -moz-column-gap:      0px;
+      column-count:         5;
+      column-gap:           0px;
+    }
+
+    .photos img {
+      /* Just in case there are inline attributes */
+      width: 100% !important;
+      height: auto !important;
+      border: 5px solid black;
+
+    }
+
+    @media (max-width: 1200px) {
+        .photos {
+        -moz-column-count:    4;
+        -webkit-column-count: 4;
+        column-count:         4;
+        }
+    }
+    @media (max-width: 1000px) {
+      .photos {
+      -moz-column-count:    3;
+      -webkit-column-count: 3;
+      column-count:         3;
+      }
+    }
+    @media (max-width: 800px) {
+      .photos {
+      -moz-column-count:    2;
+      -webkit-column-count: 2;
+      column-count:         2;
+      }
+    }
+    @media (max-width: 400px) {
+      .photos {
+      -moz-column-count:    1;
+      -webkit-column-count: 1;
+      column-count:         1;
+      }
+    }
+
+</style>
+
+
+</head>
+
+<body>
+
+
+<!--CAROUSEL-->
+<!---<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="margin-top: -100px;  z-index: 0; position: relative;">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="{ static "images/artist.jpg" %}" alt="First slide">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="{ static "images/collection.jpg" %}" alt="Second slide">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="{ static "images/artwork.jpg" %}" alt="Third slide">
+    </div>
+  </div>
+</div>--->
+<!--END-OF-CAROUSEL-->
+
+<!--SEARCH-->
+<div style = "background-color: #ffd004; height: 400px; z-index: -2;  margin-top: -100px;">
+    <form action="{% url 'gallery:search_results' %}" method="get" style="z-index: 0; position: absolute; top: 130px; right: 1em; margin-bottom: 10px" class="col-4">
+      <div class="form-row" >
+        <div class="col-12">
+          <input name="q" class="form-control mr-sm-2" type="text" placeholder="Search here..." aria-label="Search">
+        </div>
+
+        <div class="col" style="margin-top: 10px;">
+          <button type="submit" class="btn btn-dark" style="background-color: #28225d" name="button">Search</button>
+        </div>
+
+
+      </div>
+
+    </form>
+</div>
+<!--END-OF-SEARCH-->
+<!--DIV-->
+<div style = "background-color: #f7b801; height: 15em; box-shadow:inset 0 0 2em rgba(0, 0, 0, 0.6); z-index: 1;  margin-top: -100px;">
+    <div style="margin-left: 190px; left: 25px;position: absolute;">
+        {% if user.is_authenticated %}
+        <h2 style = "color: black; z-index: 1; position: relative" >Hello {{ user.username }},</h2>
+        <p style = "color: black;  z-index: 1; position: relative">Welcome to the Drawing Board!</p>
+            <p style = "color: black; z-index: 1; position: relative" >You can submit and manage your artwork here.</p>
+        {% else %}
+        <h2 style = "color: black; z-index: 1; position: relative" >Hello Viewer,</h2>
+        <p style = "color: black;  z-index: 1; position: relative">Welcome to the Drawing Board!</p>
+        <p style = "color: black; z-index: 1; position: relative" >There are many pieces of artwork you can view.</p>
+        {% endif %}
+    </div>
+<div class="sea"></div>
+</div>
+
+
+<!--END-OF-DIV-->
+<!--SIDE-MENU-->
+<div class = "sidemenu" class = "col-8" style = "background: linear-gradient(180deg, #483fa6 0%, #28225d 100%); height: 100%; z-index: 3; top: 0; position: fixed; left: 0; box-shadow: 10px 10px #28225d;" >
+    <ul class="list-group " style="z-index: 4; margin-top: 90px; padding: 5px;">
+        {% if user.is_authenticated %}
+            <h2 style="color: white; text-align: center; margin: 0 0 10px; text-decoration: underline;">Links</h2>
+        {% endif %}
+            {% if request.user.is_superuser %}
+            <a href="{% url 'gallery:artist_list' %}" class="homebutton" role="button" aria-disabled="true">All Artists</a>
+            {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'gallery:artwork_list' %}" class="homebutton" role="button" aria-disabled="true">{% if request.user.is_superuser %}All Artwork{% else %} My Artwork {% endif %}</a>
+            <a href="{% url 'gallery:collection_list' %}" class="homebutton" role="button" aria-disabled="true">{% if request.user.is_superuser %}All Collections{% else %} My Collections {% endif %}</a>
+            {% if request.user.is_superuser %}
+                {% else %}
+                <a href="{% url 'gallery:favorite_list' %}" class="homebutton" role="button" aria-disabled="true">My Favorites</a>
+            {% endif %}
+            <a href="{% url 'gallery:tag_list' %}" class="homebutton" role="button" aria-disabled="true">Tags</a>
+            <a href="{% url 'gallery:contact_us' %}" class="homebutton" role="button" aria-disabled="true">Contact Us</a>
+            <!---<a href="% url 'gallery:rating_list' %}" class="homebutton" role="button" aria-disabled="true">Ratings</a>--->
+            {% else %}
+
+                <h2 style="color: white; text-align: center; margin: 0 0 10px; text-decoration: underline; margin-top: 25px; margin-bottom: 25px">DrawingBoard</h2>
+                <p style="text-align: center; color: white">Welcome!</p>
+                <p style="text-align: center; color: white">We are a site made for people</p>
+                <p style="text-align: center; color: white">to submit their own art</p>
+                <p style="text-align: center; color: white">and even check out others.</p>
+                 <hr style="border: 1px solid white; border-radius: 5px; width: 70%; position: relative">
+                <a href="{% url 'gallery:create_account' %}" class="homebutton" role="button" aria-disabled="true">New Account</a>
+            {% if user.is_authenticated %}
+               {% else %}
+               <a href="{% url 'gallery:artist_list' %}" class="homebutton" role="button" aria-disabled="true">All Artists</a>
+                <a href="{% url 'gallery:artwork_list' %}" class="homebutton" role="button" aria-disabled="true">All Artwork</a>
+            {% endif %}
+        {% endif %}
+    </ul>
+</div>
+<!--END-OF-SIDE-MENU-->
+
+<!---PHOTOS--->
+<!--we can replace with a search query instead of all artwork being displayed-->
+<!--Author.objects.filter(name__contains='Terry')-->
+<div style=" margin-top: 2em; margin-left: 190px; left: 25px;position: absolute;  overflow: auto; height: 100vm;" >
+   <h4 style="color: white; left: 3px; position: relative">All Artwork</h4>
+
+    <section class="photos">
+    {% block search %}
+    {% endblock %}
+
+    {% for artwork in artworks %}
+        <a href="{% url 'gallery:artwork_details' pk=artwork.pk %}">
+        <img src="{{ artwork.artwork_picture.url }}"/>
+        </a>
+    {% endfor %}
+    </section>
+</div>
+<!--END-OF-PHOTOS--->
+
+</body>
+
+{% endblock %}
+
+</html>

@@ -1,0 +1,11 @@
+/*************************************
+ACCOUNT DETAILS PAGE
+**************************************/
+
+img.profilepic {
+    border: 1px solid #ddd;
+    margin: 20px;
+    border-radius: 8px;
+    width: 150px;
+    height: auto;
+}

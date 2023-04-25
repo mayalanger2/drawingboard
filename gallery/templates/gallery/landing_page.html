@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+{#{% extends 'gallery/home.html' %}#}
+{% load static %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <title>LandingPage</title>
+        <style type="text/css">
+
+            h2 {
+                font: italic 5em fantasy;
+            }
+
+            button {
+                background-color: orange;
+                font: italic 2em fantasy;
+            }
+
+            body {
+                background-image: url('{% static "images/landingpage.jpg" %}');
+            }
+
+            img {
+                position: absolute;
+                left: -10px;
+                bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+    <h2>Welcome to Drawing Board Art Gallery </h2>
+    <a href="{% url 'gallery:home' %}">
+        <button>Click here to get started</button>
+    </a>
+    </body>
+{% endblock %}
+</html>

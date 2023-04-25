@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Artwork List</title>
+    <style>
+    .photos {
+      /* Prevent vertical gaps */
+      line-height: 0;
+      -webkit-column-count: 5;
+      -webkit-column-gap:   0px;
+      -moz-column-count:    5;
+      -moz-column-gap:      0px;
+      column-count:         5;
+      column-gap:           0px;
+      z-index: 5;
+    }
+
+    .photos img {
+      /* Just in case there are inline attributes */
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    @media (max-width: 1200px) {
+        .photos {
+        -moz-column-count:    4;
+        -webkit-column-count: 4;
+        column-count:         4;
+        }
+    }
+    @media (max-width: 1000px) {
+      .photos {
+      -moz-column-count:    3;
+      -webkit-column-count: 3;
+      column-count:         3;
+      }
+    }
+    @media (max-width: 800px) {
+      .photos {
+      -moz-column-count:    2;
+      -webkit-column-count: 2;
+      column-count:         2;
+      }
+    }
+    @media (max-width: 400px) {
+      .photos {
+      -moz-column-count:    1;
+      -webkit-column-count: 1;
+      column-count:         1;
+      }
+    }
+
+    /* FOLDER */
+    .folder {
+      margin-top: 50px;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding-left:20px;
+        padding-right:20px;
+      padding-top: 40px;
+      display:inline-block;
+      background-color: lightgrey;
+      margin-left: 0;
+      margin-right: 0;
+      z-index:0;
+    }
+    .folder:after{
+      content:'';
+      width: 100vw;
+      height: 100%;
+      background-color: #f7b801;
+      position: absolute;
+      transform: skew(0deg) scaleX(1.5) scaleY(1.11);
+      top:35px;
+      z-index: -1;
+        overflow: auto;
+    }
+    .folder:before{
+      content: "";
+      box-sizing: content-box;
+      top:-50px;
+      height: 50px;
+      width: 100px;
+      padding:3px 25px 10px 15px;
+      background-color:  #f7b801;
+      position: absolute;
+      z-index:-1;
+      border-radius:  5px 5px 0px 0px;
+      left:-12px;
+      transform: skew(0deg);
+      margin-left: 25px;
+      font-size:25px;
+    }
+    .folder:before{
+      content:"Favorites";
+      z-index: 3;
+      color: black;
+    }
+    </style>
+
+    </head>
+    <body style="min-width: 411px">
+    <!--DIV-->
+    <div style = "background-color: inherit; height: 250px; z-index: -2;  margin-top: -100px;">
+          <h1 style="color: white; z-index: 2; position: absolute; top: 90px; left: .5em">My Favorite Artwork</h1>
+    </div>
+    <!--END-OF-DIV-->
+
+    <div class="folder">
+        <section class="photos">
+        <!--FAVORITES--->
+        {% for favorite in favorites %}
+        {% if request.user.is_superuser or user.get_username == favorite.favorite_artist|stringformat:"s" %}
+            <a href="{% url 'gallery:artwork_details' pk=favorite.favorite_artwork.pk %}">
+            <img src="media/{{ favorite.favorite_artwork.artwork_picture }}" />
+            </a>
+        {% endif %}
+        {% endfor %}
+        <!--END-OF-FAVORITES-->
+        </section>
+    </div>
+    <div style="margin-top: 2em; position: absolute;  overflow: auto; height: 100vm;" >
+
+    </div>
+
+    </body>
+    </html>
+{% endblock %}
+
+
+</html>

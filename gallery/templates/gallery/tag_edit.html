@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% extends 'gallery/base.html' %}
+just after the  <html lang="en">
+{% load static %}
+{% block content %}
+    <head>
+        <style type="text/css">
+            body{
+                margin: 0;
+                padding: 0;
+                background: url('{% static "images/collectionnew.jpg" %}');
+                background-size: cover;
+
+                font-family: sans-serif;
+            }
+            .editbox{
+                width: 600px;
+                height: 600px;
+                background: #483fa6;
+                color: #fff;
+                top: 50%;
+                left: 50%;
+                border-radius: 4px;
+                padding: 20px;
+                position: absolute;
+                transform: translate(-50%,-50%);
+                box-sizing: border-box;
+            }
+
+            .edit-form{
+                border : none;
+                margin-bottom:20px;
+                height: 40px;
+                color: black;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <div class = "editbox">
+        <h1>Edit Tag</h1>
+        <div class = "edit-form">
+            <form method="POST" enctype="multipart/form-data" class="tag_form">{% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default">Update</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+</html>

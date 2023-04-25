@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "gallery/base.html" %}
+{% load static %}
+<head>
+
+</head>
+
+{% block content %}
+
+    {# if user has a profile picture, show by username #}
+    {% if user.artist.profile_picture %}
+        <div class="row">
+            <h1 style="margin:5% 0 0 3%; color:white"><img style="width:150px; height:auto" alt ="Profile Picture" src = "media/{{ user.artist.profile_picture }}" > {{ user.username }} Account Details:</h1>
+        </div>
+    {# if user does not have profile picture, just show username #}
+    {% else %}
+        <div class="row">
+            <h1 style="margin:5% 0 0 3%; color:white">{{ user.username }} Account Details:</h1>
+        </div>
+    {% endif %}
+
+    <div class ="row">
+        <table class="table" style="border:none; table-layout:auto; width:50%; margin:3%; background-color:#3d348b; color:white">
+            <tr>
+                <td><strong>First Name:</strong></td>
+                <td>{{ user.first_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Last Name:</strong></td>
+                <td>{{ user.last_name }}</td>
+            </tr>
+            {% if user.artist.artist_role  %}
+                <tr>
+                    <td><strong>Description:</strong></td>
+                    <td>{{ user.artist.description }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td><strong>User Name:</strong></td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>Email:</strong></td>
+                <td>{{ user.email }}</td>
+            </tr>
+
+            <!---<tr>
+                <td><strong>Password:</strong></td>
+                <td>{ for char in user.password %}*{ endfor %}</td>
+            </tr>--->
+        </table>
+    </div>
+
+    <div class="row">
+        {% if user.artist.artist_role %}
+            <a style="margin-left:3%; padding: 15px 15px 0 0" href="{% url 'gallery:update_account_details' pk=user.pk pk_alt=user.artist.pk %}">
+                <span class="btn btn-primary">Update Details</span>
+            </a>
+        {% else %}
+            <a style="margin-left:3%; padding: 15px 15px 0 0" href="{% url 'gallery:user_update_account_details' pk=user.pk %}">
+                <span class="btn btn-primary">Update Details</span>
+            </a>
+        {% endif %}
+            <a style="padding:15px 15px 0 15px" href="{% url 'gallery:user_delete_account' pk=user.pk %}" onclick="return confirm('Are you sure you want to delete?')">
+                <span class="btn btn-danger">Delete Account</span>
+            </a>
+    </div>
+
+{% endblock %}

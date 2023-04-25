@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            body{
+                margin: 0;
+                padding: 0;
+                background: url('{% static "images/contact.jpg" %}');
+                background-size: cover;
+                background-postion: center;
+                font-family: sans-serif;
+            }
+            .contactbox{
+                width: 550px;
+                height: 550px;
+                background: #483fa6;
+                color: #fff;
+                top: 50%;
+                left: 50%;
+                border-radius: 4px;
+                padding: 20px;
+                position: absolute;
+                transform: translate(-50%,-50%);
+                box-sizing: border-box;
+            }
+
+            .contact-form {
+                border: none;
+                margin-bottom: 20px;
+                height: 40px;
+                color: black;
+                font-size: 16px;
+            }
+        </style>
+
+    </head>
+    <div class = "contactbox">
+        <h1>Contact Us</h1>
+        <h4>Get to know more? We'd love to hear from you</h4>
+        <div class = "contact-form">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="form-actions">
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+</html>

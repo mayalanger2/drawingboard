@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            body{
+                margin: 0;
+                padding: 0;
+                background: url('{% static "images/artworkbg.jpg" %}');
+                background-size: cover;
+                background-postion: center;
+                font-family: sans-serif;
+            }
+            .addbox{
+                width: 600px;
+                height: 650px;
+                background: #483fa6;
+                color: #fff;
+                top: 50%;
+                left: 50%;
+                border-radius: 4px;
+                padding: 20px;
+                position: absolute;
+                transform: translate(-50%,-50%);
+                box-sizing: border-box;
+            }
+
+            .add-form {
+                border: none;
+                margin-bottom: 20px;
+                height: 40px;
+                color: black;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <div class = "addbox">
+        <h1>Add a New Tag</h1>
+        <div class = "add-form">
+            <form method="POST" enctype="multipart/form-data" class="tag-form">{% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+</html>

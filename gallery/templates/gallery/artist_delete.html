@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block body_block %}
+    <h1>Delete {{ artist.user }}?</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Delete">
+        <a href="">Cancel</a>
+    </form>
+
+{% endblock %}
+
+</html>

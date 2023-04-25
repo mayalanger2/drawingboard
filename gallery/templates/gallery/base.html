@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drawing Board Art gallery</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<script>
+    $(function () {
+      $('[data-toggle="popover"]').popover({ trigger: "hover" })
+    })
+
+    $('.carousel').carousel({
+      interval: 10
+    })
+
+
+</script>
+
+</head>
+<style>
+    body, html{
+        font-family: 'Roboto', sans-serif;
+        height: 100%;
+        background-color: black;
+    }
+
+    .show_hide {
+        display:none;
+    }
+
+    .sea {
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAxODAgMTciIHZlcnNpb249IjEuMSI+PHRpdGxlPnNlYS1mZzwvdGl0bGU+PGRlc2NyaXB0aW9uPjwvZGVzY3JpcHRpb24+PGcgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PGcgZmlsbD0iI0ZGRDAwNCI+PHBhdGggZD0iTTAgMUMxMCAxIDIwIDYgMzAgNiA0MCA2IDUwIDEgNjAgMSA3MCAxIDgwIDYgOTAgNiAxMDAgNiAxMTAgMSAxMjAgMSAxMzAgMSAxNDAgNiAxNTAgNiAxNjAgNiAxNzAgMSAxODAgMUwxODAgMTcgMCAxNyAwIDFaIi8+PC9nPjwvZz48L3N2Zz4N), url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaW5ZTWluIG1lZXQiIHZpZXdCb3g9IjAgMCAxODAgMTciIHZlcnNpb249IjEiPjx0aXRsZT5zZWEtYmc8L3RpdGxlPjxkZXNjcmlwdGlvbj48L2Rlc2NyaXB0aW9uPjxnIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGRkVGQUIiPjxwYXRoIGQ9Ik0wIDFDMyAxIDcgMyAxMCAzIDEzIDMgMTcgMSAyMCAxIDIzIDEgMjcgMyAzMCAzIDMzIDMgMzcgMSA0MCAxIDQzIDEgNDcgMyA1MCAzIDUzIDMgNTcgMSA2MCAxIDYzIDEgNjcgMyA3MCAzIDczIDMgNzcgMSA4MCAxIDgzIDEgODcgMyA5MCAzIDkzIDMgOTcgMSAxMDAgMSAxMDMgMSAxMDcgMyAxMTAgMyAxMTMgMyAxMTcgMSAxMjAgMSAxMjMgMSAxMjcgMyAxMzAgMyAxMzMgMyAxMzcgMSAxNDAgMSAxNDMgMSAxNDcgMyAxNTAgMyAxNTMgMyAxNTcgMSAxNjAgMSAxNjMgMSAxNjcgMyAxNzAgMyAxNzMgMyAxNzcgMSAxODAgMUwxODAgMTYgMCAxNiAwIDFaIi8+PC9nPjwvZz48L3N2Zz4N);
+      background-repeat: repeat-x;
+      background-size: 900px auto, 900px auto;
+      background-position: 0 bottom, 0 bottom;
+      width: 100%;
+      height: 100%;
+      animation: sea 15s ease infinite;
+      transform: scaleY(-1);
+        z-index: -10;
+    }
+
+    @keyframes sea {
+      0% {
+        background-position: -100px bottom, 50px bottom;
+      }
+      50% {
+        background-position: 100px bottom, -50px bottom;
+      }
+      100% {
+        background-position: -100px bottom, 50px bottom;
+      }
+    }
+
+    .dropdown-item:hover {
+        background-color: #28225d;
+    }
+
+</style>
+
+
+<body>
+
+<!--NAVBAR-->
+<nav class="navbar navbar-expand-lg navbar-dark" style="border-radius: 0 !important; -moz-border-radius: 0 !important; background: #3d348b; margin: 0; z-index: 4; position: fixed; width: 100%"> <a class="navbar-brand" href="{% url 'gallery:home' %}" style="padding: 0"> <img src="{% static "images/whitelogo.png" %}" width=50em height=50em class="d-inline-block align-top" alt=""> </a>
+<h4 style="color: white">Drawing Board</h4>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active"> <a class="nav-link" href="{% url 'gallery:home' %}">Home <span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:artist_list' %}">Artist List</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:artwork_list' %}">Artwork</a> </li>
+      {% if user.is_authenticated %}
+      <!---<li class="nav-item"> <a class="nav-link" href="% url 'gallery:artwork_list' %}">% if request.user.is_superuser %}All Artwork% else %} My Artwork % endif %}</a> </li>--->
+      <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:collection_list' %}">{% if request.user.is_superuser %}All Collections{% else %} My Collections {% endif %}</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:tag_list' %}">Tag List</a> </li>
+      <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:contact_us' %}">Contact Us</a> </li>
+      {% endif %}
+    <!---RIGHT-NAVBAR--->
+    {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #3d348b; z-index: 2;">
+          <a class="dropdown-item" href="{% url 'gallery:account_details' %}" style = "color: white">Account Details</a>
+          <a class="dropdown-item" href="{% url 'password_change' %}" style = "color: white">Change Password</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'logout' %}" style = "color: white">Logout</a>
+        </div>
+      </li>
+    {% else %}
+
+        <li class="nav-item"> <a class="nav-link" href="{% url 'gallery:create_account' %}"><span class="glyphicon glyphicon-plus"></span> Create an Account</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a> </li>
+
+    {% endif %}
+
+    <!---END-OF-RIGHT-NAVBAR--->
+    </ul>
+
+  </div>
+</nav>
+<!--END-OF-NAVBAR-->
+
+<!--NAVBAR-FOLDED-->
+
+<div style = "-webkit-clip-path: polygon(0 0, 100% 0, 100% 50%, 0 100%); clip-path: polygon(0 0, 100% 0, 100% 50%, 0 100%); background-color: #28225d; height: 30px; box-shadow:inset 0 0 1em rgba(0, 0, 0, 0.2); margin: 0 auto; position: relative; z-index: 3; top: 60px;">
+</div>
+
+<!--END-OF-NAVBAR-FOLDED-->
+
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

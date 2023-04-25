@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Artwork List</title>
+        <style>
+            img.zoom {
+                border-radius: 5px;
+                object-fit: cover;
+                -webkit-transition: all .3s ease-in-out;
+                -moz-transition: all .3s ease-in-out;
+                -o-transition: all .3s ease-in-out;
+                -ms-transition: all .3s ease-in-out;
+            }
+
+            .pic-size {
+                width: 400px;
+                height: 400px;
+                object-fit: cover;
+            }
+
+            .transition {
+                -webkit-transform: scale(1.05);
+                -moz-transform: scale(1.05);
+                -o-transform: scale(1.05);
+                transform: scale(1.05);
+            }
+        </style>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+        <!-- Add fancybox3 -->
+        <!-- Reference - https://fancyapps.com/fancybox/3/docs/#introduction -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+    </head>
+    <body style="min-width: 411px">
+    <div style="top: 70px; position: relative; z-index: 0">
+
+        <h1 style="color: white; left: 25px; position: relative">Artwork Gallery</h1>
+        <!--ADD-BUTTON--->
+        <a href="{% url 'gallery:artwork_new' %}" class="btn btn-dark"
+           style="background-color: #f7b801; margin-left: 30px; position:relative;">Add Artwork</a>
+        <br><br>
+        <!--END-OF-ADD-BUTTON--->
+        <div class="container page-top col-lg-12 col-md-12">
+            <div class="row">
+                {% for artwork in artworks %}
+                    {% if request.user.is_superuser or user.get_username == artwork.artwork_artist|stringformat:"s" %}
+                        <div class="col-lg-3 col-md-3 col-xs-6 thumb">
+                            <figure>
+                                <a data-fancybox="images"
+                                   href="media/{{ artwork.artwork_picture }}"
+                                   data-caption="{{ artwork.artwork_title }}">
+                                    <img class="img-fluid pic-size zoom" style= "border-radius: 10px 40px;" src="media/{{ artwork.artwork_picture }}"/>
+                                </a>
+                                <figcaption class="card-body" style="color: white; display: none">
+                                    <h1 class="card-title">{{ artwork.artwork_title }}</h1>
+                                    <h2 class="card-text">{{ artwork.artwork_artist }}</h2>
+                                    <h3 class="card-text">{{ artwork.artwork_description }}</h3>
+                                    <h4>Tags:</h4>
+                                    {% for tag in artwork.artwork_tag.all %}
+                                        <h4>{{ tag }}</h4>
+                                    {% endfor %}
+                                </figcaption>
+                            </figure>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td><h4 style="color: white">{{ artwork.artwork_title }}</h4></td>
+                                    {% if request.user.is_superuser or user.get_username == artwork.artwork_artist|stringformat:"s" %}
+                                        <td><a href="{% url 'gallery:artwork_edit' pk=artwork.pk %}">Edit</a></td>
+                                        <td><a href="{% url 'gallery:artwork_delete' pk=artwork.pk %}"
+                                               onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    {% else %}
+                        <div class="col-lg-3 col-md-3 col-xs-6 thumb">
+                            <figure>
+                                <a data-fancybox="images"
+                                   href="media/{{ artwork.artwork_picture }}"
+                                   data-caption="{{ artwork.artwork_title }}">
+                                    <img class="img-fluid pic-size zoom" style= "border-radius: 10px 40px;" src="media/{{ artwork.artwork_picture }}"/>
+                                </a>
+                                <figcaption class="card-body" style="color: white; display: none">
+                                    <h1 class="card-title">{{ artwork.artwork_title }}</h1>
+                                    <h2 class="card-text">{{ artwork.artwork_artist }}</h2>
+                                    <h3 class="card-text">{{ artwork.artwork_description }}</h3>
+                                    <h4>Tags:</h4>
+                                    {% for tag in artwork.artwork_tag.all %}
+                                        <h4>{{ tag }}</h4>
+                                    {% endfor %}
+                                </figcaption>
+                            </figure>
+                            <table style="width: 100%">
+                                <tr>
+                                    <td><h4 style="color: white">{{ artwork.artwork_title }}</h4></td>
+                                    {% if request.user.is_superuser or user.get_username == artwork.artwork_artist|stringformat:"s" %}
+                                        <td><a href="{% url 'gallery:artwork_edit' pk=artwork.pk %}">Edit</a></td>
+                                        <td><a href="{% url 'gallery:artwork_delete' pk=artwork.pk %}"
+                                               onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script>
+        // Clone defaults
+        var imgOpts = $.extend(true, {}, $.fancybox.defaults, {
+            caption: function (instance, item) {
+                return $(this).next('figcaption').html();
+            },
+            buttons: ["zoom", "share", "slideShow", "fullScreen", "download", "thumbs", "close"],
+            thumbs: {
+                autoStart: true
+            },
+        });
+
+        // Shortcut to apply options to image gallery
+        function applyImgOpts() {
+            $('[data-fancybox="images"]').fancybox(imgOpts);
+        }
+
+        $(".zoom").hover(function () {
+            $(this).addClass('transition');
+        }, function () {
+            $(this).removeClass('transition');
+        });
+
+        applyImgOpts();
+    </script>
+    </body>
+    </html>
+
+{% endblock %}
+</html>

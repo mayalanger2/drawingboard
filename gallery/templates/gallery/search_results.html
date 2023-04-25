@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Drawing Board Art Gallery</title>
+        <style>
+            .Card {
+                display: flex;
+                justify-content: center;
+                padding: 15px;
+                width: 50vw;
+                min-height: 26rem;
+                position: relative;
+                z-index: 1;
+            }
+            .Card-image {
+                flex-basis: 20%;
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+
+            }
+            .Card-body {
+                margin: 0em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex-basis: 60%;
+                margin-top: var(--margin);
+                margin-bottom: var(--margin);
+                margin-right: -6em;
+                padding: 0 1.4em;
+                background-color: #fff;
+                box-shadow: rgba(0,0,0,.2) 0 .2em .2em;
+            }
+            .Card-title {
+                margin-bottom: .4em;
+            }
+            .Card-title,
+            .Card-description { margin: 0; }
+
+            .homebutton {
+                align-self: center;
+                background: transparent;
+                padding: 1rem 1rem;
+                margin: 1rem;
+                transition: all .5s ease;
+                color: white;
+                font-size: 2rem;
+                letter-spacing: 1px;
+                outline: none;
+                box-shadow: 20px 38px 34px -26px hsla(0, 0%, 0%, .2);
+                border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+                border:solid 2px white;
+            }
+
+            .homebutton:hover{
+                box-shadow:2px 8px 4px -6px hsla(0,0%,0%,.3);
+                color: black;
+                background-color: #f7b801;
+                border:solid 5px black;
+            }
+
+            a, a:hover, a:visited, a:active {
+              text-decoration: none;
+            }
+
+            .photos {
+              /* Prevent vertical gaps */
+              line-height: 0;
+              -webkit-column-count: 5;
+              -webkit-column-gap:   0px;
+              -moz-column-count:    5;
+              -moz-column-gap:      0px;
+              column-count:         5;
+              column-gap:           0px;
+            }
+
+            .photos img {
+              /* Just in case there are inline attributes */
+              width: 100% !important;
+              height: auto !important;
+              border: 5px solid black;
+
+            }
+
+            @media (max-width: 1200px) {
+                .photos {
+                -moz-column-count:    4;
+                -webkit-column-count: 4;
+                column-count:         4;
+                }
+            }
+            @media (max-width: 1000px) {
+              .photos {
+              -moz-column-count:    3;
+              -webkit-column-count: 3;
+              column-count:         3;
+              }
+            }
+            @media (max-width: 800px) {
+              .photos {
+              -moz-column-count:    2;
+              -webkit-column-count: 2;
+              column-count:         2;
+              }
+            }
+            @media (max-width: 400px) {
+              .photos {
+              -moz-column-count:    1;
+              -webkit-column-count: 1;
+              column-count:         1;
+              }
+            }
+
+            /* Sort CSS */
+            .dropbtn {
+              background-color: #483fa6;
+              color: white;
+              padding: 10px;
+              font-size: 16px;
+              /*border: none;*/
+              cursor: pointer;
+            }
+
+            .dropbtn:hover, .dropbtn:focus {
+              background-color: #28225d;
+            }
+
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                z-index: 9999;
+                background-color: #f1f1f1;
+                max-width: 500px;
+                min-width: 220px;
+                overflow: visible;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                overflow: visible;
+            }
+
+            .dropdown a:hover {
+                background-color: #ddd;
+            }
+
+            .show {
+                display: block;
+            }
+
+            .sorted_by {
+                color: white;
+            }
+
+            .filter_and_sort {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                margin: 0;
+                padding: 0;
+                white-space: nowrap;
+                overflow-y: visible;
+            }
+            .dropdown, .datefilter {
+                color: white;
+                width: 100%;
+                height: 100%;
+            }
+            .datefilter {
+                display: inline-block;
+                position: relative;
+                margin-left: -70%;
+            }
+            .submitDates {
+                display: inline-block;
+                background-color: #483fa6;
+                color: white;
+            }
+            .clearFilters {
+                position: relative;
+                z-index: 500;
+                display: inline-block;
+                background-color: #483fa6;
+                color: white;
+                padding: 2px 6px 2px 6px;
+                border-top: 1px solid #CCCCCC;
+                border-right: 1px solid #333333;
+                border-bottom: 1px solid #333333;
+                border-left: 1px solid #CCCCCC;
+            }
+            .clearFilters:hover, .clearFilters:focus{
+                background-color: #28225d;
+            }
+            .submitDates:hover, .submitDates:focus{
+                background-color: #28225d;
+            }
+            input {
+                color: black;
+            }
+            .no_filter_results {
+                color:white;
+                position: relative;
+                overflow: visible;
+            }
+
+        </style>
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function dropdownFunction() {
+              document.getElementById("sortDropdown").classList.toggle("show");
+            }
+
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+              if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                  }
+                }
+              }
+            }
+        </script>
+        <!-- FOR DATEPICKER -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            $( function() {
+            $( "#datepicker" ).datepicker();
+            } );
+        </script>
+        <script>
+            $( function() {
+            $( "#datepicker2" ).datepicker();
+            } );
+        </script>
+
+    </head>
+
+    <!--SEARCH-->
+<div style = "background-color: #ffd004; height: 400px; z-index: -2;  margin-top: -100px;">
+    <form action="{% url 'gallery:search_results' %}" method="get" style="z-index: 0; position: absolute; top: 130px; right: 1em; margin-bottom: 10px" class="col-4">
+      <div class="form-row" >
+        <div class="col-12">
+          <input name="q" class="form-control mr-sm-2" type="text" placeholder="Search here..." aria-label="Search">
+        </div>
+
+        <div class="col" style="margin-top: 10px;">
+          <button type="submit" class="btn btn-dark" style="background-color: #28225d" name="button">Search</button>
+        </div>
+      </div>
+
+    </form>
+</div>
+<!--END-OF-SEARCH-->
+
+<!--DIV-->
+<div class="results_wrapper" style = "background-color: #f7b801; height: 15em; box-shadow:inset 0 0 2em rgba(0, 0, 0, 0.6); z-index: 1;  margin-top: -100px;">
+    <div class="results_count" style="margin-left: 190px; left: 25px;position: absolute;">
+        <h2 style = "color: black; z-index: 1; position: relative">{{ object_list.distinct.count }} result{% if object_list.distinct.count != 1 %}s{% endif %} found for "{{ query }}":</h2>
+    </div>
+    <div class="sea"></div>
+</div>
+<!--END-OF-DIV-->
+
+<!--SIDE-MENU-->
+<div class = "sidemenu" class = "col-8" style = "background: linear-gradient(180deg, #483fa6 0%, #28225d 100%); height: 100%; z-index: 3; top: 0; position: fixed; left: 0; box-shadow: 10px 10px #28225d;" >
+    <ul class="list-group " style="z-index: 4; margin-top: 90px; padding: 5px;">
+        {% if user.is_authenticated %}
+            <h2 style="color: white; text-align: center; margin: 0 0 10px; text-decoration: underline;">Links</h2>
+        {% endif %}
+            {% if request.user.is_superuser %}
+            <a href="{% url 'gallery:artist_list' %}" class="homebutton" role="button" aria-disabled="true">All Artists</a>
+            {% endif %}
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'gallery:artwork_list' %}" class="homebutton" role="button" aria-disabled="true">{% if request.user.is_superuser %}All Artwork{% else %} My Artwork {% endif %}</a>
+            <a href="{% url 'gallery:collection_list' %}" class="homebutton" role="button" aria-disabled="true">{% if request.user.is_superuser %}All Collections{% else %} My Collections {% endif %}</a>
+            {% if request.user.is_superuser %}
+                {% else %}
+                <a href="{% url 'gallery:favorite_list' %}" class="homebutton" role="button" aria-disabled="true">My Favorites</a>
+            {% endif %}
+            <!---<a href="% url 'gallery:tag_list' %}" class="homebutton" role="button" aria-disabled="true">Tags</a>--->
+            <!---<a href="% url 'gallery:rating_list' %}" class="homebutton" role="button" aria-disabled="true">Ratings</a>--->
+            {% else %}
+
+                <h2 style="color: white; text-align: center; margin: 0 0 10px; text-decoration: underline; margin-top: 25px; margin-bottom: 25px">DrawingBoard</h2>
+                <p style="text-align: center; color: white">Welcome!</p>
+                <p style="text-align: center; color: white">We are a site made for people</p>
+                <p style="text-align: center; color: white">to submit their own art</p>
+                <p style="text-align: center; color: white">and even check out others.</p>
+                 <hr style="border: 1px solid white; border-radius: 5px; width: 70%; position: relative">
+                <a href="{% url 'gallery:create_account' %}" class="homebutton" role="button" aria-disabled="true">New Account</a>
+            {% if user.is_authenticated %}
+               {% else %}
+               <a href="{% url 'gallery:artist_list' %}" class="homebutton" role="button" aria-disabled="true">All Artists</a>
+
+            {% endif %}
+        {% endif %}
+    </ul>
+</div>
+<!--END-OF-SIDE-MENU-->
+
+
+<!--SEARCH RESULTS-->
+<div style=" margin-top: 1em; margin-left: 190px; left: 25px;position: absolute; height: 100vm; width: 85%; overflow-x:hidden;" >
+
+    {% if object_list %}
+        <div class="filter_and_sort">
+            <div class="dropdown">
+                <button onclick="dropdownFunction()" class="dropbtn">Sort by...</button>
+                <div id="sortDropdown" class="dropdown-content">
+                    <a href="{% url 'gallery:search_results' view_id=2 original_query=query %}">Date Submitted (newest first)</a>
+                    <a href="{% url 'gallery:search_results' view_id=3 original_query=query %}">Date Submitted (oldest first)</a>
+                    <a href="{% url 'gallery:search_results' view_id=4 original_query=query %}">Artwork Title (A to Z)</a>
+                    <a href="{% url 'gallery:search_results' view_id=5 original_query=query %}">Artwork Title (Z to A)</a>
+                    <!-- <a href="{ url 'gallery:search_results' view_id=1 original_query=query %}">Rating (highest to lowest)</a> NOTE: currently not functional-->
+                </div>
+                <div class="sorted_by">
+                    Currently sorting by: {{ sorted_by }}
+                </div>
+            </div>
+            <div class="datefilter">
+                <h3 style="display: inline-block; padding-right: 20px;">Filter Results by Date:</h3>
+                <form method="POST" class="date-filter-form" action="{% url 'gallery:search_results' view_id=view_id filter_id=1 original_query=query%}">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    <input type="submit" value="Submit" class="submitDates">
+                </form>
+            </div>
+            <div style="display: inline-block; margin-left: -75%; color: white">
+                <p>Current filters applied:<br/>
+                Start Range: {{ start_filter }}<br/>
+                End Range: {{ end_filter }}</p>
+                <a class="clearFilters" href="{% url 'gallery:search_results' view_id=view_id original_query=query %}">Clear Filters</a>
+            </div>
+        </div>
+
+        {% for art in object_list.distinct %}
+            <div class="Card">
+                <div class="Card-image"><a href="{% url 'gallery:artwork_details' pk=art.pk %}"><img src="{{ art.artwork_picture.url }}" height=300px width=auto></a></div>
+                    <div class="Card-body">
+                        <h1 class="Card-title"><a href="{% url 'gallery:artwork_details' pk=art.pk %}">"{{ art.artwork_title }}"</a></h1>
+                        <p class="Card-description">by <a href="{% url 'gallery:artist_view' pk=art.artwork_artist.pk %}"> {{ art.artwork_artist }} </a>
+                        <br>
+                        </p>
+                        <hr style="border: 2px solid black; border-radius: 3px; opacity: .5; margin: 3px; margin-left: 0; position: relative"/>
+                        <p class="Card-description"><strong>Submitted:</strong>  {{ art.artwork_created }}</p>
+                        <!-- <p class="Card-description"><strong>Average Rating:</strong>  </p>  Need a way to display this -->
+                        <p class="Card-description"><strong>Description:</strong> {{ art.artwork_description }}</p>
+                        <p class="Card-description"><strong>Tags:</strong> {% for tag in art.artwork_tag.all %} {{ tag }}, {% endfor %} </p>
+                    </div>
+            </div>
+        {% endfor %}
+    {% elif filter_id == 1 %}
+        <div style="height: 500px">
+        <div class="filter_and_sort">
+            <div class="dropdown">
+                <button onclick="dropdownFunction()" class="dropbtn">Sort by...</button>
+                <div id="sortDropdown" class="dropdown-content">
+                    <a href="{% url 'gallery:search_results' view_id=2 original_query=query %}">Date Submitted (newest first)</a>
+                    <a href="{% url 'gallery:search_results' view_id=3 original_query=query %}">Date Submitted (oldest first)</a>
+                    <a href="{% url 'gallery:search_results' view_id=4 original_query=query %}">Artwork Title (A to Z)</a>
+                    <a href="{% url 'gallery:search_results' view_id=5 original_query=query %}">Artwork Title (Z to A)</a>
+                    <!-- <a href="{ url 'gallery:search_results' view_id=1 original_query=query %}">Rating (highest to lowest)</a> NOTE: currently not functional-->
+                </div>
+                <div class="sorted_by">
+                    Currently sorting by: {{ sorted_by }}
+                </div>
+            </div>
+            <div class="datefilter">
+                <h3 style="display: inline-block; padding-right: 20px;">Filter Results by Date:</h3>
+                <form method="POST" class="date-filter-form" action="{% url 'gallery:search_results' view_id=view_id filter_id=1 original_query=query%}">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    <input type="submit" value="Submit" class="submitDates">
+                </form>
+            </div>
+            <div style="display: inline-block; margin-left: -75%; color: white">
+                <p>Current filters applied:<br/>
+                Start Range: {{ start_filter }}<br/>
+                End Range: {{ end_filter }}</p>
+                <a class="clearFilters" href="{% url 'gallery:search_results' view_id=view_id original_query=query %}">Clear Filters</a>
+            </div>
+        </div>
+        <div class="no_filter_results"><h2>No results found for the currently applied filter. Please try again.</h2></div>
+        </div>
+    {% else %}
+        <div style="position: fixed; color: white; margin-left: 10px; z-index: 10">
+            <h4>No results found for "{{ query }}", please try again.</h4>
+        </div>
+    {% endif %}
+
+</div>
+<!--END OF SEARCH RESULTS-->
+
+    </div>
+
+    </body>
+    </html>
+{% endblock %}

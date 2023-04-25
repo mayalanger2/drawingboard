@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'gallery/base.html' %}
+{% load static %}
+{% block content %}
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Drawing Board Art Gallery</title>
+        <style>
+            .Card {
+                display: flex;
+                justify-content: center;
+                margin-top: 25px;
+                width: 50vw;
+                min-height: 26rem;
+            }
+            .Card-image {
+                flex-basis: 20%;
+                background-position: center;
+                background-size: cover;
+                background-repeat: no-repeat;
+
+            }
+            .Card-body {
+                margin: 0em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex-basis: 60%;
+                margin-top: var(--margin);
+                margin-bottom: var(--margin);
+                margin-right: -6em;
+                padding: 0 1.4em;
+                background-color: #fff;
+                box-shadow: rgba(0,0,0,.2) 0 .2em .2em;
+            }
+            .Card-title {
+                margin-bottom: .4em;
+                text-transform: uppercase;
+            }
+            .Card-title,
+            .Card-description { margin: 0; }
+        </style>
+    </head>
+    <body style="min-width: 411px">
+    <div style="top: 70px; left:25px; position: relative">
+        <h1 style="color: white">Artist List</h1>
+        <!--ADD-BUTTON--->
+        <a href="{% url 'gallery:artist_new' %}" class="btn btn-dark" style="background-color: #f7b801; margin-top: 10px; position: relative">Add Artist</a>
+
+        {% for artist in artists %}
+            <div class="Card">
+                <div class="Card-image"><img src="media/{{ artist.profile_picture }}" height=300 width=300/></div>
+                <div class="Card-body">
+                    <h1 class="Card-title">{{ artist.user }}</h1>
+                    <p class="Card-description">{{ artist.description}}
+                        <br>
+                    <hr style="border: 2px solid black; border-radius: 3px; opacity: .5; margin: 3px; margin-left: 0; position: relative">
+                    </p>
+                    {% if request.user.is_superuser or user.get_username == artist.user|stringformat:"s" %}
+
+                        <a href="{% url 'gallery:artist_edit' pk=artist.pk %}" class="btn btn-warning" style="width: 10em">Edit</a>
+                        <br style="margin: 1px; position: relative">
+                        <a href="{% url 'gallery:artist_delete' pk=artist.pk %}"
+                           onclick="return confirm('Are you sure you want to delete?')"
+                           class="btn btn-danger" style="width: 10em">Delete</a>
+                        <br style="margin: 1px; position: relative">
+                    {% endif %}
+                    <a href="{% url 'gallery:artist_view' pk=artist.pk %}" class="btn btn-primary" style="width: 10em">View Artworks</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+    </body>
+    </html>
+{% endblock %}
+
